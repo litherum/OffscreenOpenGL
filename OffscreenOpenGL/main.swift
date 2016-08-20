@@ -60,7 +60,7 @@ for maskBit in 0 ..< sizeof(GLuint) * 8 {
     }
 }
 
-let attributes = [kCGLPFAColorSize, CGLPixelFormatAttribute(24), kCGLPFAOpenGLProfile, CGLPixelFormatAttribute(kCGLOGLPVersion_GL4_Core.rawValue), kCGLPFARendererID, CGLPixelFormatAttribute(UInt32(offlineRendererID)), kCGLPFAAllowOfflineRenderers, CGLPixelFormatAttribute(0)]
+let attributes = [kCGLPFAColorSize, CGLPixelFormatAttribute(24), kCGLPFAOpenGLProfile, CGLPixelFormatAttribute(kCGLOGLPVersion_GL4_Core.rawValue), kCGLPFARendererID, CGLPixelFormatAttribute(UInt32(onlineRendererID)), kCGLPFAAllowOfflineRenderers, kCGLPFASupportsAutomaticGraphicsSwitching, CGLPixelFormatAttribute(0)]
 var pixelFormat = CGLPixelFormatObj()
 var numScreens = GLint(0)
 error = CGLChoosePixelFormat(attributes, &pixelFormat, &numScreens)
