@@ -72,19 +72,43 @@ int main(int argc, const char * argv[]) {
     assert(glGetError() == GL_NO_ERROR);
     glBindTexture(GL_TEXTURE_2D, texture);
     assert(glGetError() == GL_NO_ERROR);
-    unsigned char* textureData = malloc(width * height * 4);
+    float* textureData = malloc(width * height * 4 * sizeof(float));
     assert(textureData != NULL);
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
-            textureData[i * width * 4 + j * 4 + 0] = 0;
-            textureData[i * width * 4 + j * 4 + 1] = 128;
-            textureData[i * width * 4 + j * 4 + 2] = 0;
-            textureData[i * width * 4 + j * 4 + 3] = 255;
+            textureData[i * width * 4 + j * 4 + 0] = 0.3f;
+            textureData[i * width * 4 + j * 4 + 1] = 0.4f;
+            textureData[i * width * 4 + j * 4 + 2] = 0.5f;
+            textureData[i * width * 4 + j * 4 + 3] = 0.6f;
         }
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, textureData);
     assert(glGetError() == GL_NO_ERROR);
     free(textureData);
+    /*float* textureData2 = malloc((width / 2) * (height / 2) * 4 * sizeof(float));
+    for (int i = 0; i < (height / 2); ++i) {
+        for (int j = 0; j < (width / 2); ++j) {
+            textureData2[i * (width / 2) * 4 + j * 4 + 0] = 0.7f;
+            textureData2[i * (width / 2) * 4 + j * 4 + 1] = 0.8f;
+            textureData2[i * (width / 2) * 4 + j * 4 + 2] = 0.9f;
+            textureData2[i * (width / 2) * 4 + j * 4 + 3] = 1.0f;
+        }
+    }
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, width / 2, height / 2, 0, GL_RGBA, GL_FLOAT, textureData2);
+    assert(glGetError() == GL_NO_ERROR);
+    free(textureData2);*/
+    unsigned char* textureData2 = malloc((width / 2) * (height / 2) * 4 * sizeof(unsigned char));
+    for (int i = 0; i < (height / 2); ++i) {
+        for (int j = 0; j < (width / 2); ++j) {
+            textureData2[i * (width / 2) * 4 + j * 4 + 0] = 1;
+            textureData2[i * (width / 2) * 4 + j * 4 + 1] = 128;
+            textureData2[i * (width / 2) * 4 + j * 4 + 2] = 0;
+            textureData2[i * (width / 2) * 4 + j * 4 + 3] = 255;
+        }
+    }
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA32F, width / 2, height / 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData2);
+    assert(glGetError() == GL_NO_ERROR);
+    free(textureData2);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     assert(glGetError() == GL_NO_ERROR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -93,10 +117,10 @@ int main(int argc, const char * argv[]) {
     assert(glGetError() == GL_NO_ERROR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     assert(glGetError() == GL_NO_ERROR);
-    /*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     assert(glGetError() == GL_NO_ERROR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
-    assert(glGetError() == GL_NO_ERROR);*/
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    assert(glGetError() == GL_NO_ERROR);
 
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     assert(glGetError() == GL_NO_ERROR);
@@ -128,7 +152,8 @@ int main(int argc, const char * argv[]) {
     "out vec4 color;\n"
     "\n"
     "void main() {\n"
-    "    color = texture(tex, textureCoordinate);\n"
+    //"    color = textureLod(tex, textureCoordinate, 1.0);\n"
+    "    color = texelFetch(tex, ivec2(0, 0), 1);\n"
     "}\n"
     "";
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
