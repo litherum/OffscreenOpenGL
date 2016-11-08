@@ -18,30 +18,30 @@ var onlineRendererID = GLint(0)
 var offlineRendererID = GLint(0)
 
 var found = false
-for maskBit in 0 ..< sizeof(GLuint) * 8 {
-    var rendererInfo = CGLRendererInfoObj()
+for maskBit in 0 ..< MemoryLayout<GLuint>.size * 8 {
+    var rendererInfo: CGLRendererInfoObj? = nil
     var numRenderers = GLint(0)
     error = CGLQueryRendererInfo(UInt32(1 << maskBit), &rendererInfo, &numRenderers)
     if error != kCGLNoError {
         continue
     }
     assert(error == kCGLNoError)
-    error = CGLDescribeRenderer(rendererInfo, 0, kCGLRPRendererCount, &numRenderers)
+    error = CGLDescribeRenderer(rendererInfo!, 0, kCGLRPRendererCount, &numRenderers)
     assert(error == kCGLNoError)
     for renderer in 0 ..< numRenderers {
         var rendererID = GLint(0)
-        error = CGLDescribeRenderer(rendererInfo, renderer, kCGLRPRendererID, &rendererID)
+        error = CGLDescribeRenderer(rendererInfo!, renderer, kCGLRPRendererID, &rendererID)
         assert(error == kCGLNoError)
         //if rendererID != currentRenderer {
         //    continue
         //}
         print("Found renderer.")
         var offscreen = GLint(0)
-        error = CGLDescribeRenderer(rendererInfo, renderer, kCGLRPOffScreen, &offscreen)
+        error = CGLDescribeRenderer(rendererInfo!, renderer, kCGLRPOffScreen, &offscreen)
         assert(error == kCGLNoError)
         print("Offscreen: \(offscreen)")
         var online = GLint(0)
-        error = CGLDescribeRenderer(rendererInfo, renderer, kCGLRPOnline, &online)
+        error = CGLDescribeRenderer(rendererInfo!, renderer, kCGLRPOnline, &online)
         assert(error == kCGLNoError)
         print("Online: \(online)")
         if online != 0 {
@@ -55,7 +55,7 @@ for maskBit in 0 ..< sizeof(GLuint) * 8 {
         //found = true
         break
     }
-    error = CGLDestroyRendererInfo(rendererInfo);
+    error = CGLDestroyRendererInfo(rendererInfo!);
     assert(error == kCGLNoError)
     if found {
         break
@@ -63,16 +63,16 @@ for maskBit in 0 ..< sizeof(GLuint) * 8 {
 }
 
 let attributes = [kCGLPFAColorSize, CGLPixelFormatAttribute(24), kCGLPFAOpenGLProfile, CGLPixelFormatAttribute(kCGLOGLPVersion_GL4_Core.rawValue), kCGLPFARendererID, CGLPixelFormatAttribute(UInt32(onlineRendererID)), kCGLPFAAllowOfflineRenderers, kCGLPFASupportsAutomaticGraphicsSwitching, CGLPixelFormatAttribute(0)]
-var pixelFormat = CGLPixelFormatObj()
+var pixelFormat: CGLPixelFormatObj? = nil
 var numScreens = GLint(0)
 error = CGLChoosePixelFormat(attributes, &pixelFormat, &numScreens)
 assert(error == kCGLNoError)
-var context = CGLContextObj()
-error = CGLCreateContext(pixelFormat, nil, &context)
+var context: CGLContextObj? = nil
+error = CGLCreateContext(pixelFormat!, nil, &context)
 assert(error == kCGLNoError)
 
 var currentRenderer = GLint(0)
-error = CGLGetParameter(context, kCGLCPCurrentRendererID, &currentRenderer)
+error = CGLGetParameter(context!, kCGLCPCurrentRendererID, &currentRenderer)
 assert(error == kCGLNoError)
 
 print("Current renderer: \(currentRenderer)")
@@ -108,10 +108,12 @@ printGLError()
 
 print("OpenGL \(majorVersion).\(minorVersion)")
 
+/*
 let vendorCString = glGetString(GLenum(GL_VENDOR))
 printGLError()
-let vendorString = String(CString: UnsafePointer<CChar>(vendorCString), encoding: NSASCIIStringEncoding)!
+let vendorString = String(CString: UnsafePointer<CChar>(vendorCString), encoding: String.Encoding.ascii)
 print("Vendor: \(vendorString)")
+*/
 
 var framebuffer = GLuint(0)
 glGenFramebuffers(1, &framebuffer)
@@ -163,7 +165,7 @@ printGLError()
 
 glReadBuffer(GLenum(GL_COLOR_ATTACHMENT2))
 printGLError()
-var pixelData = [GLfloat](count: 4, repeatedValue: 0)
+var pixelData = [GLfloat](repeating: 0, count: 4)
 glReadPixels(0, 0, 1, 1, GLenum(GL_RGBA), GLenum(GL_FLOAT), &pixelData)
 printGLError()
 print("Color data: \(pixelData)")
@@ -176,7 +178,7 @@ printGLError()
 //CGLTexImageIOSurface2D(ctx: CGLContextObj, _ target: GLenum, _ internal_format: GLenum, _ width: GLsizei, _ height: GLsizei, _ format: GLenum, _ type: GLenum, _ ioSurface: IOSurface, _ plane: GLuint) -> CGLError
 var ioSurfaceBytesPerRow = IOSurfaceAlignProperty(kIOSurfaceBytesPerRow, 16)
 let properties = [ kIOSurfaceWidth as String : 1, kIOSurfaceHeight as String : 1, kIOSurfacePixelFormat as String : Int(kCVPixelFormatType_32BGRA), kIOSurfaceBytesPerRow as String: ioSurfaceBytesPerRow, kIOSurfaceBytesPerElement as String: 16]
-let ioSurface = IOSurfaceCreate(properties)!
+let ioSurface = IOSurfaceCreate(properties as CFDictionary)!
 let ioSurfacePixelFormat = IOSurfaceGetPixelFormat(ioSurface)
 let ioSurfaceAllocSize = IOSurfaceGetAllocSize(ioSurface)
 let ioSurfaceBytesPerElement = IOSurfaceGetBytesPerElement(ioSurface)
@@ -198,7 +200,7 @@ glTexParameteri(GLenum(GL_TEXTURE_RECTANGLE), GLenum(GL_TEXTURE_BASE_LEVEL), 0);
 printGLError()
 glTexParameteri(GLenum(GL_TEXTURE_RECTANGLE), GLenum(GL_TEXTURE_MAX_LEVEL), 0);
 printGLError()
-error = CGLTexImageIOSurface2D(context, GLenum(GL_TEXTURE_RECTANGLE), GLenum(GL_RGBA), 1, 1, GLenum(GL_BGRA), GLenum(GL_UNSIGNED_INT_8_8_8_8_REV), ioSurface, 0)
+error = CGLTexImageIOSurface2D(context!, GLenum(GL_TEXTURE_RECTANGLE), GLenum(GL_RGBA), 1, 1, GLenum(GL_BGRA), GLenum(GL_UNSIGNED_INT_8_8_8_8_REV), ioSurface, 0)
 assert(error == kCGLNoError)
 
 glGenFramebuffers(1, &framebuffer)
@@ -242,7 +244,7 @@ printGLError()
 
 glReadBuffer(GLenum(GL_COLOR_ATTACHMENT0))
 printGLError()
-pixelData = [GLfloat](count: 4, repeatedValue: 0)
+pixelData = [GLfloat](repeating: 0, count: 4)
 glReadPixels(0, 0, 1, 1, GLenum(GL_RGBA), GLenum(GL_FLOAT), &pixelData)
 printGLError()
 print("Color data: \(pixelData)")
