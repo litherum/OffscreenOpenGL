@@ -65,6 +65,8 @@ int main(int argc, const char * argv[]) {
     assert(glGetError() == GL_NO_ERROR);
     assert(framebufferStatus == GL_FRAMEBUFFER_COMPLETE);
 
+    glActiveTexture(GL_TEXTURE0);
+    assert(glGetError() == GL_NO_ERROR);
     GLuint texture;
     glGenTextures(1, &texture);
     assert(glGetError() == GL_NO_ERROR);
@@ -83,15 +85,29 @@ int main(int argc, const char * argv[]) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
     assert(glGetError() == GL_NO_ERROR);
     free(textureData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    assert(glGetError() == GL_NO_ERROR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    assert(glGetError() == GL_NO_ERROR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    assert(glGetError() == GL_NO_ERROR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    assert(glGetError() == GL_NO_ERROR);
+    /*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    assert(glGetError() == GL_NO_ERROR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    assert(glGetError() == GL_NO_ERROR);*/
 
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     assert(glGetError() == GL_NO_ERROR);
     char* vertexShaderSource = "#version 150\n"
     "\n"
     "in vec2 position;\n"
+    "out vec2 textureCoordinate;\n"
     "\n"
     "void main() {\n"
     "    gl_Position = vec4(position, 0, 1);\n"
+    "    textureCoordinate = (position + 1.0) / 2.0;\n"
     "}\n"
     "";
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -107,10 +123,12 @@ int main(int argc, const char * argv[]) {
     assert(glGetError() == GL_NO_ERROR);
     char* fragmentShaderSource = "#version 150\n"
     "\n"
+    "uniform sampler2D tex;\n"
+    "in vec2 textureCoordinate;\n"
     "out vec4 color;\n"
     "\n"
     "void main() {\n"
-    "    color = vec4(1, 0, 0, 1);\n"
+    "    color = texture(tex, textureCoordinate);\n"
     "}\n"
     "";
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -152,6 +170,10 @@ int main(int argc, const char * argv[]) {
     assert(glGetError() == GL_NO_ERROR);
     glBindVertexArray(vertexArray);
     assert(glGetError() == GL_NO_ERROR);
+
+    GLint uniformLocation = glGetUniformLocation(program, "tex");
+    assert(glGetError() == GL_NO_ERROR);
+    glUniform1i(uniformLocation, 0);
 
     GLint attribLocation = glGetAttribLocation(program, "position");
     assert(glGetError() == GL_NO_ERROR);
