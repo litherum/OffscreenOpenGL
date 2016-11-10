@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C206B1061D68E12A009A56E1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C206B1051D68E12A009A56E1 /* main.swift */; };
 		C26A715D1DD25D27009C4C07 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = C26A715C1DD25D27009C4C07 /* main.c */; };
+		C26A71681DD4E654009C4C07 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = C26A71671DD4E654009C4C07 /* main.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +31,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		C26A71631DD4E654009C4C07 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +47,8 @@
 		C206B1051D68E12A009A56E1 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C26A715A1DD25D27009C4C07 /* DrawTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DrawTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C26A715C1DD25D27009C4C07 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		C26A71651DD4E654009C4C07 /* ReadTexels */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ReadTexels; sourceTree = BUILT_PRODUCTS_DIR; };
+		C26A71671DD4E654009C4C07 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +66,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C26A71621DD4E654009C4C07 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -62,6 +81,7 @@
 			children = (
 				C206B1041D68E12A009A56E1 /* OffscreenOpenGL */,
 				C26A715B1DD25D27009C4C07 /* DrawTest */,
+				C26A71661DD4E654009C4C07 /* ReadTexels */,
 				C206B1031D68E12A009A56E1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,6 +91,7 @@
 			children = (
 				C206B1021D68E12A009A56E1 /* OffscreenOpenGL */,
 				C26A715A1DD25D27009C4C07 /* DrawTest */,
+				C26A71651DD4E654009C4C07 /* ReadTexels */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -89,6 +110,14 @@
 				C26A715C1DD25D27009C4C07 /* main.c */,
 			);
 			path = DrawTest;
+			sourceTree = "<group>";
+		};
+		C26A71661DD4E654009C4C07 /* ReadTexels */ = {
+			isa = PBXGroup;
+			children = (
+				C26A71671DD4E654009C4C07 /* main.c */,
+			);
+			path = ReadTexels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,6 +157,23 @@
 			productReference = C26A715A1DD25D27009C4C07 /* DrawTest */;
 			productType = "com.apple.product-type.tool";
 		};
+		C26A71641DD4E654009C4C07 /* ReadTexels */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C26A71691DD4E654009C4C07 /* Build configuration list for PBXNativeTarget "ReadTexels" */;
+			buildPhases = (
+				C26A71611DD4E654009C4C07 /* Sources */,
+				C26A71621DD4E654009C4C07 /* Frameworks */,
+				C26A71631DD4E654009C4C07 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ReadTexels;
+			productName = ReadTexels;
+			productReference = C26A71651DD4E654009C4C07 /* ReadTexels */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -143,6 +189,10 @@
 						LastSwiftMigration = 0810;
 					};
 					C26A71591DD25D27009C4C07 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+					};
+					C26A71641DD4E654009C4C07 = {
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
 					};
@@ -162,6 +212,7 @@
 			targets = (
 				C206B1011D68E12A009A56E1 /* OffscreenOpenGL */,
 				C26A71591DD25D27009C4C07 /* DrawTest */,
+				C26A71641DD4E654009C4C07 /* ReadTexels */,
 			);
 		};
 /* End PBXProject section */
@@ -180,6 +231,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C26A715D1DD25D27009C4C07 /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C26A71611DD4E654009C4C07 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C26A71681DD4E654009C4C07 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,6 +365,28 @@
 			};
 			name = Release;
 		};
+		C26A716A1DD4E654009C4C07 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C26A716B1DD4E654009C4C07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -332,6 +413,14 @@
 			buildConfigurations = (
 				C26A715F1DD25D27009C4C07 /* Debug */,
 				C26A71601DD25D27009C4C07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C26A71691DD4E654009C4C07 /* Build configuration list for PBXNativeTarget "ReadTexels" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C26A716A1DD4E654009C4C07 /* Debug */,
+				C26A716B1DD4E654009C4C07 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
